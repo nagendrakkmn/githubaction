@@ -7,10 +7,21 @@ jobs:
     steps: 
      -  name: echo hello world 
         run: echo "hello worl"
+     -  name: list file before
+        run: |
+         pwd
+         ls         
+     -  name: checkout action
+        uses: actions/checkout@v1
+     -  name: list files after
+        run: |
+          pwd
+          ls        
      -  name: multi command
         run: |
           node -v
           npm -v
+          
      -  name: run phython command
         run: |
           import platform 
