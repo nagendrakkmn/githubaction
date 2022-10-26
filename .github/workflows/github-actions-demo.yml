@@ -1,29 +1,36 @@
-name: run shell command
+name: manul deployment
 
-on: push
+on:
+ workflow_dispatch:
+  inputs:
+    ApigeeOrg:
+      type: choice
+      description: select Org to deploy 
+      options:
+      - shell-nonprod
+      - shell
+    environment:
+      type: choice
+      description: select env to deploy 
+      options:
+        - dev
+        - test
+        - prod
 jobs:
-  run-shell-commands:
+  Proxy-Deployment:
     runs-on: ubuntu-latest
-    steps: 
-     -  name: echo hello world 
-        run: echo "hello worl"
-     -  name: list file before
-        run: |
-         pwd
-         ls         
-     -  name: checkout action
-        uses: actions/checkout@v1
-     -  name: list files after
-        run: |
-          pwd
-          ls        
-     -  name: multi command
-        run: |
-          node -v
-          npm -v
-          
-     -  name: run phython command
-        run: |
-          import platform 
-          print (platform.processor())
-        shell: python
+    steps:
+      - name: populate profile 
+         apigeeProfile="dev"
+           if:${{(github.event.inputs.environment == "dev" && github.event.inputs.ApigeeOrg == "shell-nonprod")}}
+           apigeeProfile = "dev"
+           if:${{(github.event.inputs.environment == "test" && github.event.inputs.ApigeeOrg == "shell")}}
+           apigeeProfile = "test"
+            if:${{(github.event.inputs.environment == "prod" && github.event.inputs.ApigeeOrg == "shell")}}
+            apigeeProfile = "prod"
+            
+      - run: echo "Print profile - ${{apigeeProfile}}"
+            
+            
+    
+  
